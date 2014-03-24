@@ -1,9 +1,13 @@
 package edu.oregonstate.cope.clientRecorder;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.clientRecorder.fileOps.SimpleFileProvider;
 import edu.oregonstate.cope.clientRecorder.util.COPELogger;
-import edu.oregonstate.cope.clientRecorder.util.ConsoleLogger;
 import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 public class RecorderFacade {
@@ -21,13 +25,14 @@ public class RecorderFacade {
 	private ClientRecorder clientRecorder;
 	private Uninstaller uninstaller;
 	private LoggerInterface copeLogger;
+	private String workspaceDirectory;
 
 	private RecorderFacade() {
 		initLogger();
 	}
 
 	public RecorderFacade initialize(StorageManager manager, String IDE) {
-		String workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
+		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
 		
 		initFileLogging(workspaceDirectory);
 		
@@ -105,6 +110,23 @@ public class RecorderFacade {
 
 	public String getInstallationConfigFilename() {
 		return INSTALLATION_CONFIG_FILENAME;
+	}
+
+	public String getWorkspaceID() {
+		File workspaceIdFile = getWorkspaceIdFile();
+		String workspaceID = "";
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(workspaceIdFile));
+			workspaceID = reader.readLine();
+			reader.close();
+		} catch (IOException e) {
+		}
+		return workspaceID;
+	}
+
+	public File getWorkspaceIdFile() {
+		return new File(workspaceDirectory + File.separator + "workspace_id");
 	}
 
 }
