@@ -26,14 +26,16 @@ public class RecorderFacade {
 		initLogger();
 	}
 
-	public RecorderFacade initialize(String workspaceDirectory, String permanentDirectory, String eventFilesDirectory, String IDE) {
+	public RecorderFacade initialize(StorageManager manager, String IDE) {
+		String workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
+		
 		initFileLogging(workspaceDirectory);
-
-		initProperties(workspaceDirectory, permanentDirectory);
+		
+		initProperties(workspaceDirectory, manager.getBundleStorage().getAbsolutePath());
 		initUninstaller();
-		initPersister(eventFilesDirectory);
+		initPersister(manager.getVersionedLocalStorage().getAbsolutePath());
 		initClientRecorder(IDE);
-
+		
 		return this;
 	}
 
