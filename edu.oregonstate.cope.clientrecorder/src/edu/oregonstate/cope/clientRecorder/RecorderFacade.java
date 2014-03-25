@@ -18,10 +18,6 @@ public class RecorderFacade {
 	private static final String WORKSPACE_CONFIG_FILENAME = "config";
 	private static final String INSTALLATION_CONFIG_FILENAME = "config-install";
 
-	private static class Instance {
-		public static final RecorderFacade _instance = new RecorderFacade();
-	}
-
 	private Properties workspaceProperties;
 	private Properties installationProperties;
 
@@ -32,11 +28,9 @@ public class RecorderFacade {
 	
 	private boolean isFirstStart = false;
 
-	public RecorderFacade() {
+	public RecorderFacade(StorageManager manager, String IDE) {
 		initLogger();
-	}
-
-	public RecorderFacade initialize(StorageManager manager, String IDE) {
+		
 		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
 		
 		if (!isWorkspaceKnown()) {
@@ -50,8 +44,6 @@ public class RecorderFacade {
 		initUninstaller();
 		initPersister(manager.getVersionedLocalStorage().getAbsolutePath());
 		initClientRecorder(IDE);
-		
-		return this;
 	}
 
 	private void initFileLogging(String rootDirectory) {

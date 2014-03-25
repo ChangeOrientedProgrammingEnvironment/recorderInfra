@@ -54,7 +54,7 @@ public class KnowWorkspaceTest {
 	@Before
 	public void setUp() {
 		testStorageManager = new TestStorageManager();
-		recorder = new RecorderFacade().initialize(testStorageManager, "");
+		recorder = new RecorderFacade(testStorageManager, "");
 	}
 	
 	@After
