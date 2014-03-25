@@ -32,18 +32,18 @@ public class RecorderFacade {
 	
 	private boolean isFirstStart = false;
 
-	private RecorderFacade() {
+	public RecorderFacade() {
 		initLogger();
+		initFileLogging(workspaceDirectory);
 	}
 
 	public RecorderFacade initialize(StorageManager manager, String IDE) {
-		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
 		if (!isWorkspaceKnown()) {
 			isFirstStart = true;
 			getToKnowWorkspace();
 		}
 		
-		initFileLogging(workspaceDirectory);
+		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
 		
 		initProperties(workspaceDirectory, manager.getBundleStorage().getAbsolutePath());
 		initUninstaller();
