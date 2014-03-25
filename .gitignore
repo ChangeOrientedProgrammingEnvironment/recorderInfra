@@ -13,3 +13,7 @@ clientRecorder.iml
 /edu.oregonstate.cope.eclipse.updatesite/artifacts.jar
 
 /External\ Plug-in\ Libraries
+
+/edu.oregonstate.cope.clientrecorder.tests/outputFiles/
+
+/edu.oregonstate.cope.clientrecorder.tests/null/
