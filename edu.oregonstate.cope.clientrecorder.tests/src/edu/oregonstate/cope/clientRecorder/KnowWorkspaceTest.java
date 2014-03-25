@@ -12,10 +12,9 @@ import org.junit.Test;
 public class KnowWorkspaceTest {
 
 	private final class TestStorageManager implements StorageManager {
-		private File onlyFolder;
 		
 		public TestStorageManager() {
-			onlyFolder = new File("./test-Folder");
+			onlyFolder = new File("./outputFiles");
 			onlyFolder.mkdir();
 		}
 
@@ -48,6 +47,7 @@ public class KnowWorkspaceTest {
 		}
 	}
 
+	private File onlyFolder;
 	private RecorderFacade recorder;
 	private TestStorageManager testStorageManager;
 
