@@ -1,9 +1,12 @@
 package edu.oregonstate.cope.clientRecorder;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.UUID;
 
 import edu.oregonstate.cope.clientRecorder.fileOps.EventFilesProvider;
 import edu.oregonstate.cope.clientRecorder.fileOps.SimpleFileProvider;
@@ -127,6 +130,24 @@ public class RecorderFacade {
 
 	public File getWorkspaceIdFile() {
 		return new File(workspaceDirectory + File.separator + "workspace_id");
+	}
+	
+	protected void getToKnowWorkspace() {
+		try {
+			File workspaceIdFile = getWorkspaceIdFile();
+			workspaceIdFile.createNewFile();
+			String workspaceID = UUID.randomUUID().toString();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(workspaceIdFile));
+			writer.write(workspaceID);
+			writer.close();
+		} catch (IOException e) {
+			getLogger().error(this, e.getMessage(), e);
+		}
+	}
+	
+	protected boolean isWorkspaceKnown() {
+		File workspaceIdFile = getWorkspaceIdFile();
+		return workspaceIdFile.exists();
 	}
 
 }
