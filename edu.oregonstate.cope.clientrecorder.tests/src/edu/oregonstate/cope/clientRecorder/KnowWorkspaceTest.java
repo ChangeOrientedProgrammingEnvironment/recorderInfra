@@ -64,6 +64,9 @@ public class KnowWorkspaceTest {
 
 	@Test
 	public void testIDontKnowThisWorkspace() {
+		File wid = new File("./outputFiles/workspace_id");
+		if (wid.exists())
+			assertTrue(wid.delete());
 		assertFalse(recorder.isWorkspaceKnown());
 	}
 
