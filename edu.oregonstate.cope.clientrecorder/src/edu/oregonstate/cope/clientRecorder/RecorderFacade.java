@@ -34,7 +34,6 @@ public class RecorderFacade {
 
 	public RecorderFacade() {
 		initLogger();
-		initFileLogging(workspaceDirectory);
 	}
 
 	public RecorderFacade initialize(StorageManager manager, String IDE) {
@@ -43,6 +42,7 @@ public class RecorderFacade {
 			getToKnowWorkspace();
 		}
 		
+		initFileLogging(workspaceDirectory);
 		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
 		
 		initProperties(workspaceDirectory, manager.getBundleStorage().getAbsolutePath());
