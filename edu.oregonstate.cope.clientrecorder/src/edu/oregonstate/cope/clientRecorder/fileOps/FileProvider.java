@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.oregonstate.cope.clientRecorder.RecorderFacade;
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 
 /**
  * The file provider encapsulates file persistence rules. Each subclass provides
@@ -57,10 +58,10 @@ public abstract class FileProvider {
 		try {
 			Files.createDirectories(this.rootDirectory);
 		} catch (IOException e) {
-			RecorderFacade.instance().getLogger().error(this, e.getMessage(), e);
+			COPELogger.getInstance().error(this, e.getMessage(), e);
 		}
 
-		RecorderFacade.instance().getLogger().info(this, getClass().getSimpleName() + " set the root to " + this.rootDirectory.toString());
+		COPELogger.getInstance().info(this, getClass().getSimpleName() + " set the root to " + this.rootDirectory.toString());
 	}
 
 	public void appendToCurrentFile(String string) {
@@ -75,7 +76,7 @@ public abstract class FileProvider {
 		try {
 			Files.write(getCurrentFilePath(), string.getBytes(), options);
 		} catch (IOException e) {
-			RecorderFacade.instance().getLogger().error(this, e.getMessage(), e);
+			COPELogger.getInstance().error(this, e.getMessage(), e);
 		}
 	}
 
@@ -87,7 +88,7 @@ public abstract class FileProvider {
 			return Files.readAllLines(getCurrentFilePath(), Charset.defaultCharset());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			RecorderFacade.instance().getLogger().error(this, e.getMessage(), e);
+			COPELogger.getInstance().error(this, e.getMessage(), e);
 		}
 
 		return null;
@@ -98,7 +99,7 @@ public abstract class FileProvider {
 			return getCurrentFilePath().toFile().length() == 0;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			RecorderFacade.instance().getLogger().error(this, e.getMessage(), e);
+			COPELogger.getInstance().error(this, e.getMessage(), e);
 		}
 		return false;
 	}

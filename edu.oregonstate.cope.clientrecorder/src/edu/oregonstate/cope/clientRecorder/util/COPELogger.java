@@ -14,6 +14,18 @@ import ch.qos.logback.core.FileAppender;
 public class COPELogger implements LoggerInterface {
 
 	private static final String FILE_APPENDER = "fileAppender";
+	
+	private static COPELogger instance = null;
+	
+	protected COPELogger() {
+	}
+
+	public static LoggerInterface getInstance() {
+		if (instance == null)
+			instance = new COPELogger();
+		
+		return instance;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.oregonstate.cope.clientRecorder.util.LoggerInterface#enableFileLogging(java.lang.String, java.lang.String)

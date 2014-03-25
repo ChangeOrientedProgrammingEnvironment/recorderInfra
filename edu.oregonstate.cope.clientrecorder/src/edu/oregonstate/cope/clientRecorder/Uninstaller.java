@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
+
 /**
  * Responsible with knowing whether the plugin should be uninstalled or not. If
  * no uninstall date is present in the properties, the maximum date allowed by GregorianCalendar is
@@ -80,7 +82,7 @@ public class Uninstaller {
 		try {
 			date = DATE_FORMATTER.parse(dateString);
 		} catch (ParseException e) {
-			RecorderFacade.instance().getLogger().error(this, e.getMessage(), e);
+			COPELogger.getInstance().error(this, e.getMessage(), e);
 		}
 
 		Calendar cal = Calendar.getInstance();

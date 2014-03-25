@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.json.simple.JSONObject;
 
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
 /**
@@ -28,7 +29,7 @@ public class ClientRecorder {
 	}
 
 	public ClientRecorder() {
-		logger = RecorderFacade.instance().getLogger();
+		logger = COPELogger.getInstance();
 	}
 
 	/**

@@ -60,7 +60,7 @@ public class RecorderFacade {
 	}
 
 	private void initLogger() {
-		copeLogger = new COPELogger();
+		copeLogger = COPELogger.getInstance();
 		//copeLogger = new ConsoleLogger();
 		
 		// copeLogger.logOnlyErrors();
@@ -112,10 +112,6 @@ public class RecorderFacade {
 
 	public LoggerInterface getLogger() {
 		return copeLogger;
-	}
-
-	public static RecorderFacade instance() {
-		return Instance._instance;
 	}
 
 	public String getInstallationConfigFilename() {
