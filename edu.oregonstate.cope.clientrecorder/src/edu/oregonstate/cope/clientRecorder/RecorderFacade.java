@@ -29,6 +29,8 @@ public class RecorderFacade {
 	private Uninstaller uninstaller;
 	private LoggerInterface copeLogger;
 	private String workspaceDirectory;
+	
+	private boolean isFirstStart = false;
 
 	private RecorderFacade() {
 		initLogger();
@@ -36,6 +38,10 @@ public class RecorderFacade {
 
 	public RecorderFacade initialize(StorageManager manager, String IDE) {
 		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
+		if (!isWorkspaceKnown()) {
+			isFirstStart = true;
+			getToKnowWorkspace();
+		}
 		
 		initFileLogging(workspaceDirectory);
 		
@@ -148,6 +154,10 @@ public class RecorderFacade {
 	protected boolean isWorkspaceKnown() {
 		File workspaceIdFile = getWorkspaceIdFile();
 		return workspaceIdFile.exists();
+	}
+	
+	public boolean isFirstStart() {
+		return isFirstStart;
 	}
 
 }
