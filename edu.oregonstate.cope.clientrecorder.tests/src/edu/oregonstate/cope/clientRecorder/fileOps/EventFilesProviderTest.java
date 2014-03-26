@@ -34,7 +34,7 @@ public class EventFilesProviderTest {
 
 		assertEquals(0, parent.toFile().listFiles().length);
 
-		Files.delete(parent);
+		FileUtils.deleteDirectory(rootPath.toFile());
 	}
 
 	@Test
