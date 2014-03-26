@@ -4,7 +4,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,12 +40,8 @@ public class KnowWorkspaceTest {
 			return onlyFolder;
 		}
 		
-		public void clean() {
-			File[] files = onlyFolder.listFiles();
-			for (File file : files) {
-				if (file.getName().equals("workspace_id"))
-					assertTrue(file.delete());
-			}
+		public void clean() throws IOException {
+			FileUtils.deleteDirectory(onlyFolder);
 		}
 	}
 
@@ -58,7 +56,7 @@ public class KnowWorkspaceTest {
 	}
 	
 	@After
-	public void tearDown() {
+	public void tearDown() throws IOException {
 		testStorageManager.clean();
 	}
 
