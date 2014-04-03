@@ -5,8 +5,10 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +16,15 @@ import org.junit.Test;
 public class EventFilesProviderTest {
 
 	private static FileProvider fm;
+	private Path rootPath;
 
 	@Before
 	public void setup() throws IOException {
+		rootPath = Paths.get("outputFiles");
+		assertFalse(Files.exists(rootPath));
+		
 		fm = new EventFilesProvider();
-		fm.setRootDirectory("outputFiles");
+		fm.setRootDirectory(rootPath.toString());
 	}
 
 	@After
@@ -28,7 +34,7 @@ public class EventFilesProviderTest {
 
 		assertEquals(0, parent.toFile().listFiles().length);
 
-		Files.delete(parent);
+		FileUtils.deleteDirectory(rootPath.toFile());
 	}
 
 	@Test
