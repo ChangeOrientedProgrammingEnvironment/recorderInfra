@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: FileSender
+Bundle-SymbolicName: edu.oregonstate.cope.filesender
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: com.jcraft.jsch;bundle-version="0.1.46",
+ edu.oregonstate.cope.thirdparty;bundle-version="1.0.0",
+ edu.oregonstate.cope.clientrecorder
+Export-Package: edu.oregonstate.cope.fileSender
