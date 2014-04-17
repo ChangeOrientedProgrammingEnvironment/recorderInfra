@@ -41,7 +41,7 @@ public class DeleteOldFilesUtil {
 		deleteFilesInDirByPattern(rootDirectory, ZIP_LIBS_REGEX, purgeTime);
 	}
 
-	protected void deleteFilesInDirByPattern(File dir, final String pattern, final long purgeTime) {
+	public void deleteFilesInDirByPattern(File dir, final String pattern, final long purgeTime) {
 		try {
 			Files.walkFileTree(dir.toPath(), new SimpleFileVisitor<Path>() {
 				@Override
