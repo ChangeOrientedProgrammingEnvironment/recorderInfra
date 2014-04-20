@@ -18,7 +18,7 @@ public class FileSender {
 		
 		CronTrigger cronTrigger = new CronTrigger();
 		cronTrigger.setName("ftpUploadTrigger");
-		FTPConnectionProperties ftpProperties = new FTPConnectionProperties(fileSenderParams);		
+		FTPConnectionProperties ftpProperties = new FTPConnectionProperties();		
 		String cronJobConfig = ftpProperties.getCronConfiguration();
 		cronTrigger.setCronExpression(cronJobConfig);
 		
