@@ -25,6 +25,8 @@ public class FTPConnectionProperties {
 	protected final static String PROPERTIES_PATH = "resources.ftp";
 	protected final static String PROPERTIES_FILE_NAME = "resources/ftp.properties";
 	
+	protected final static int DEFAULT_FTP_PORT = 22;
+	
 	protected static PropertyResourceBundle ftpProperties;
 		
 //	private static FTPConnectionProperties ftpConnectionProperties = null;
@@ -53,7 +55,11 @@ public class FTPConnectionProperties {
 	}
 	
 	public int getPort() {
-		return Integer.parseInt(this.getProperties().getString("port"));
+		String strPort = this.getProperties().getString("port");
+		if(strPort != null && strPort != "") {
+			return DEFAULT_FTP_PORT;
+		}
+		return Integer.parseInt(strPort);
 	}
 
 	public String getUsername() {
