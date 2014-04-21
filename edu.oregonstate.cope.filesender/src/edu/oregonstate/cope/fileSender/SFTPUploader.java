@@ -18,16 +18,18 @@ public class SFTPUploader {
 	private Session session = null;
 	
 	private String host = "";
+	private int port;
 	private String username = "";
 	private String password = "";
 	
-	private void initializeSession(String host, String username, String password) throws UnknownHostException, JSchException {
+	private void initializeSession(String host, int port, String username, String password) throws UnknownHostException, JSchException {
 		this.host = host;
+		this.port = port;
 		this.username = username;
 		this.password = password;
 		
 		JSch jsch = new JSch();
-		this.session = jsch.getSession(this.username, this.host, 22);
+		this.session = jsch.getSession(this.username, this.host, this.port);
 		this.session.setPassword(this.password);
 		java.util.Properties config = new java.util.Properties();
 		config.put("StrictHostKeyChecking", "no");
@@ -40,8 +42,8 @@ public class SFTPUploader {
 	
 	}
 	
-	public SFTPUploader(String host, String username, String password) throws UnknownHostException, JSchException {
-		this.initializeSession(host, username, password);
+	public SFTPUploader(String host, int port, String username, String password) throws UnknownHostException, JSchException {
+		this.initializeSession(host, port, username, password);
 	}
 	
 	public void upload(String localPath, String remotePath) throws FileNotFoundException, SftpException, JSchException {

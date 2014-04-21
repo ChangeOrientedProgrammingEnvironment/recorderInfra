@@ -1,11 +1,9 @@
 package edu.oregonstate.cope.fileSender;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -25,6 +23,9 @@ public class FTPConnectionProperties {
 			(byte) 0x12, (byte) 0xda, (byte) 0x34, (byte) 0x8, (byte) 0x42, };
 
 	protected final static String PROPERTIES_PATH = "resources.ftp";
+	protected final static String PROPERTIES_FILE_NAME = "resources/ftp.properties";
+	
+	protected final static int DEFAULT_FTP_PORT = 22;
 	
 	protected static PropertyResourceBundle ftpProperties;
 		
@@ -32,8 +33,8 @@ public class FTPConnectionProperties {
 
 //	private COPELogger logger;
 	
-	public FTPConnectionProperties(FileSenderParams fileSenderParams) {
-		//this.logger = (COPELogger) fileSenderParams.getCopeLogger();
+	public FTPConnectionProperties() {
+		
 	}
 //	public static FTPConnectionProperties getInstance() {
 //		if(ftpConnectionProperties == null) {
@@ -52,6 +53,14 @@ public class FTPConnectionProperties {
 	public String getHost() {
 		return this.getProperties().getString("host");
 	}
+	
+	public int getPort() {
+		String strPort = this.getProperties().getString("port");
+		if(strPort != null && strPort != "") {
+			return DEFAULT_FTP_PORT;
+		}
+		return Integer.parseInt(strPort);
+	}
 
 	public String getUsername() {
 		return this.getProperties().getString("username");
@@ -65,13 +74,17 @@ public class FTPConnectionProperties {
 		return this.getProperties().getString("frequency");
 	}
 
-	public String getPassword() throws GeneralSecurityException,
-			IOException {
+	public String getPassword() {
 		String encodedPassword = this.getProperties().getString("password");
-		return decrypt(encodedPassword);
+		try {
+			return decrypt(encodedPassword);
+		} catch (GeneralSecurityException | IOException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
-	private String encrypt(String property)
+	public String encrypt(String property)
 			throws GeneralSecurityException, UnsupportedEncodingException {
 		SecretKeyFactory keyFactory = SecretKeyFactory
 				.getInstance("PBEWithMD5AndDES");
@@ -81,7 +94,7 @@ public class FTPConnectionProperties {
 		return base64Encode(pbeCipher.doFinal(property.getBytes("UTF-8")));
 	}
 
-	private String decrypt(String property)
+	public String decrypt(String property)
 			throws GeneralSecurityException, IOException {
 		SecretKeyFactory keyFactory = SecretKeyFactory
 				.getInstance("PBEWithMD5AndDES");
@@ -98,4 +111,5 @@ public class FTPConnectionProperties {
 	private byte[] base64Decode(String property) throws IOException {
 		return Base64.decodeBase64(property);
 	}
+	
 }
