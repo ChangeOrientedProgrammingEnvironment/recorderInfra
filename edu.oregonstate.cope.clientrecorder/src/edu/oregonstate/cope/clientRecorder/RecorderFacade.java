@@ -27,8 +27,11 @@ public class RecorderFacade {
 	private String workspaceDirectory;
 	
 	private boolean isFirstStart = false;
+	private StorageManager storageManager;
 
 	public RecorderFacade(StorageManager manager, String IDE) {
+		this.storageManager = manager;
+		
 		initLogger();
 		
 		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
@@ -147,6 +150,10 @@ public class RecorderFacade {
 	
 	public boolean isFirstStart() {
 		return isFirstStart;
+	}
+	
+	public StorageManager getStorageManager(){
+		return storageManager;
 	}
 
 }
