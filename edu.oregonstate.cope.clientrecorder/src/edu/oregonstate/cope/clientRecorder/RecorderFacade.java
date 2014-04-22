@@ -13,7 +13,7 @@ import edu.oregonstate.cope.clientRecorder.fileOps.SimpleFileProvider;
 import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 import edu.oregonstate.cope.clientRecorder.util.LoggerInterface;
 
-public class RecorderFacade {
+public class RecorderFacade implements RecorderFacadeInterface {
 	private static final String LOG_FILE_NAME = "log";
 	private static final String WORKSPACE_CONFIG_FILENAME = "config";
 	private static final String INSTALLATION_CONFIG_FILENAME = "config-install";
@@ -27,8 +27,11 @@ public class RecorderFacade {
 	private String workspaceDirectory;
 	
 	private boolean isFirstStart = false;
+	private StorageManager storageManager;
 
 	public RecorderFacade(StorageManager manager, String IDE) {
+		this.storageManager = manager;
+		
 		initLogger();
 		
 		workspaceDirectory = manager.getLocalStorage().getAbsolutePath();
@@ -86,30 +89,58 @@ public class RecorderFacade {
 		ChangePersister.instance().setFileManager(eventFileProvider);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getClientRecorder()
+	 */
+	@Override
 	public ClientRecorder getClientRecorder() {
 		return clientRecorder;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getWorkspaceProperties()
+	 */
+	@Override
 	public Properties getWorkspaceProperties() {
 		return workspaceProperties;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getInstallationProperties()
+	 */
+	@Override
 	public Properties getInstallationProperties() {
 		return installationProperties;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getUninstaller()
+	 */
+	@Override
 	public Uninstaller getUninstaller() {
 		return uninstaller;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getLogger()
+	 */
+	@Override
 	public LoggerInterface getLogger() {
 		return copeLogger;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getInstallationConfigFilename()
+	 */
+	@Override
 	public String getInstallationConfigFilename() {
 		return INSTALLATION_CONFIG_FILENAME;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getWorkspaceID()
+	 */
+	@Override
 	public String getWorkspaceID() {
 		File workspaceIdFile = getWorkspaceIdFile();
 		String workspaceID = "";
@@ -123,6 +154,10 @@ public class RecorderFacade {
 		return workspaceID;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getWorkspaceIdFile()
+	 */
+	@Override
 	public File getWorkspaceIdFile() {
 		return new File(workspaceDirectory + File.separator + "workspace_id");
 	}
@@ -145,8 +180,20 @@ public class RecorderFacade {
 		return workspaceIdFile.exists();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#isFirstStart()
+	 */
+	@Override
 	public boolean isFirstStart() {
 		return isFirstStart;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface#getStorageManager()
+	 */
+	@Override
+	public StorageManager getStorageManager(){
+		return storageManager;
 	}
 
 }
