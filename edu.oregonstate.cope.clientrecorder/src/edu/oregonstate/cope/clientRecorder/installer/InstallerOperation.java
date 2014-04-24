@@ -35,7 +35,7 @@ public abstract class InstallerOperation {
 
 		if (workspaceFile.exists() && permanentFile.exists()) {
 			// System.out.println(this.getClass() + " both files exist");
-			doBothFilesExists();
+			doBothFilesExists(workspaceFile, permanentFile);
 		}
 
 		else if (!workspaceFile.exists() && permanentFile.exists()) {
@@ -62,7 +62,7 @@ public abstract class InstallerOperation {
 		Files.copy(permanentFile.toPath(), workspaceFile.toPath());
 	}
 
-	protected void doBothFilesExists() {
+	protected void doBothFilesExists(File workspaceFile, File permanentFile) {
 	}
 
 	protected abstract void doNoFileExists(File workspaceFile, File permanentFile) throws IOException;
