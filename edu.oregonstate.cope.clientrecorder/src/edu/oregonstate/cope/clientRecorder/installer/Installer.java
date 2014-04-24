@@ -15,8 +15,9 @@ public abstract class Installer {
 	protected RecorderFacadeInterface recorder;
 	protected InstallerHelper installerHelper;
 
-	public Installer() {
-		super();
+	public Installer(RecorderFacadeInterface recorder, InstallerHelper installerHelper) {
+		this.recorder = recorder;
+		this.installerHelper = installerHelper;
 	}
 
 	public void doInstall() throws IOException {
