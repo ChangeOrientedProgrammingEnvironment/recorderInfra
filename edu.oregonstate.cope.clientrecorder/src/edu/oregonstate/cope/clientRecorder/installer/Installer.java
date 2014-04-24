@@ -3,6 +3,7 @@ package edu.oregonstate.cope.clientRecorder.installer;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.oregonstate.cope.clientRecorder.RecorderFacadeInterface;
 
@@ -22,7 +23,7 @@ public abstract class Installer {
 
 	public void doInstall() throws IOException {
 	
-		ArrayList<InstallerOperation> installerOperations = getInstallOperations();
+		List<InstallerOperation> installerOperations = getInstallOperations();
 		
 		for (InstallerOperation installOperation : installerOperations) {
 			initInstallOperation(installOperation);
@@ -35,7 +36,7 @@ public abstract class Installer {
 		doUpdate(recorder.getWorkspaceProperties().getProperty(LAST_PLUGIN_VERSION), installerHelper.getPluginVersion());
 	}
 	
-	protected abstract ArrayList<InstallerOperation> getInstallOperations();
+	protected abstract List<InstallerOperation> getInstallOperations();
 
 	public void doUpdate(String propertiesVersion, String currentPluginVersion) {
 		if (propertiesVersion == null || !propertiesVersion.equals(currentPluginVersion)) {
