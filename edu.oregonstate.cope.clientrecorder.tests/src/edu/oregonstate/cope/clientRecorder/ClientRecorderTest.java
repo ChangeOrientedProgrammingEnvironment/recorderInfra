@@ -15,7 +15,7 @@ public class ClientRecorderTest extends JSONTest {
 
 	@Before
 	public void setup() {
-		clientRecorder = new ClientRecorder();
+		clientRecorder = new ClientRecorder(null);
 		clientRecorder.setIDE("IDEA");
 	}
 
