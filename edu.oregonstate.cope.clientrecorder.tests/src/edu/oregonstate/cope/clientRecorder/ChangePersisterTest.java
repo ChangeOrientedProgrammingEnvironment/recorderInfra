@@ -16,12 +16,14 @@ import edu.oregonstate.cope.tests.util.StubFileProvider;
 public class ChangePersisterTest {
 
 	private StubFileProvider fileManager;
+	private ChangePersister changePersister;
 
 	@Before
 	public void setup() {
 		fileManager = new StubFileProvider();
-		ChangePersister.instance().setFileManager(fileManager);
-
+		
+		changePersister = new ChangePersister(fileManager);
+		
 		testInit();
 	}
 
