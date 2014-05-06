@@ -65,8 +65,14 @@ public class RecorderFacade implements RecorderFacadeInterface {
 	}
 
 	private void initClientRecorder(String IDE) {
-		clientRecorder = new ClientRecorder(changePersister);
+		ClientRecorder clientRecorder = instantiateRecorder();
+		
+		clientRecorder.setPersister(changePersister);
 		clientRecorder.setIDE(IDE);
+	}
+
+	protected ClientRecorder instantiateRecorder() {
+		return new ClientRecorder();
 	}
 
 	private void initUninstaller() {
