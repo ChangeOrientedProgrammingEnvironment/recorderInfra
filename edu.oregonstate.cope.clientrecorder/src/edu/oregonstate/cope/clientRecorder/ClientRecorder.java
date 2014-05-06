@@ -20,7 +20,7 @@ public class ClientRecorder {
 
 	private LoggerInterface logger;
 
-	private ChangePersister changePersister;
+	protected ChangePersister changePersister;
 
 	public String getIDE() {
 		return IDE;
