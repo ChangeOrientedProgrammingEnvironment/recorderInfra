@@ -30,9 +30,17 @@ public class ClientRecorder {
 		this.IDE = IDE;
 	}
 
+	public void setPersister(ChangePersister changePersister) {
+		this.changePersister = changePersister;
+	}
+
 	public ClientRecorder(ChangePersister changePersister) {
 		logger = COPELogger.getInstance();
 		this.changePersister = changePersister;
+	}
+
+	public ClientRecorder() {
+		this(null);
 	}
 
 	/**
