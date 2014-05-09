@@ -28,6 +28,7 @@ public class RecorderFacade implements RecorderFacadeInterface {
 	
 	private boolean isFirstStart = false;
 	private StorageManager storageManager;
+	private ChangePersister changePersister;
 
 	public RecorderFacade(StorageManager manager, String IDE) {
 		this.storageManager = manager;
@@ -64,8 +65,14 @@ public class RecorderFacade implements RecorderFacadeInterface {
 	}
 
 	private void initClientRecorder(String IDE) {
-		clientRecorder = new ClientRecorder();
+		clientRecorder = instantiateRecorder();
+		
+		clientRecorder.setPersister(changePersister);
 		clientRecorder.setIDE(IDE);
+	}
+
+	protected ClientRecorder instantiateRecorder() {
+		return new ClientRecorder();
 	}
 
 	private void initUninstaller() {
@@ -86,7 +93,8 @@ public class RecorderFacade implements RecorderFacadeInterface {
 	private void initPersister(String rootDirectory) {
 		EventFilesProvider eventFileProvider = new EventFilesProvider();
 		eventFileProvider.setRootDirectory(rootDirectory);
-		ChangePersister.instance().setFileManager(eventFileProvider);
+		
+		changePersister = new ChangePersister(eventFileProvider);
 	}
 
 	/* (non-Javadoc)

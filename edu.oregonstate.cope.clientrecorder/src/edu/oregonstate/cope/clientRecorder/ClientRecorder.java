@@ -20,6 +20,8 @@ public class ClientRecorder {
 
 	private LoggerInterface logger;
 
+	protected ChangePersister changePersister;
+
 	public String getIDE() {
 		return IDE;
 	}
@@ -28,8 +30,17 @@ public class ClientRecorder {
 		this.IDE = IDE;
 	}
 
-	public ClientRecorder() {
+	public void setPersister(ChangePersister changePersister) {
+		this.changePersister = changePersister;
+	}
+
+	public ClientRecorder(ChangePersister changePersister) {
 		logger = COPELogger.getInstance();
+		this.changePersister = changePersister;
+	}
+
+	public ClientRecorder() {
+		this(null);
 	}
 
 	/**
@@ -50,7 +61,7 @@ public class ClientRecorder {
 	 */
 	public void recordTextChange(String text, int offset, int length, String sourceFile, String changeOrigin) {
 		try {
-			ChangePersister.instance().persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
+			changePersister.persist(buildTextChangeJSON(text, offset, length, sourceFile, changeOrigin));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -58,7 +69,7 @@ public class ClientRecorder {
 
 	public void recordRefresh(String text, String fileName, long modificationStamp) {
 		try {
-			ChangePersister.instance().persist(buildRefreshJSON(text, fileName, modificationStamp));
+			changePersister.persist(buildRefreshJSON(text, fileName, modificationStamp));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -67,7 +78,7 @@ public class ClientRecorder {
 
 	public void recordDebugLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
 		try {
-			ChangePersister.instance().persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
+			changePersister.persist(buildLaunchEventJSON(Events.debugLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -75,7 +86,7 @@ public class ClientRecorder {
 
 	public void recordNormalLaunch(String launchTime, String launchName, String launchFile, String launchConfiguration, Map launchAttributes) {
 		try {
-			ChangePersister.instance().persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
+			changePersister.persist(buildLaunchEventJSON(Events.normalLaunch, launchTime, launchName, launchFile, launchConfiguration, launchAttributes));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -83,7 +94,7 @@ public class ClientRecorder {
 
 	public void recordLaunchEnd(String launchTime) {
 		try {
-			ChangePersister.instance().persist(buildLaunchEndEventJSON(Events.launchEnd, launchTime));
+			changePersister.persist(buildLaunchEndEventJSON(Events.launchEnd, launchTime));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -91,7 +102,7 @@ public class ClientRecorder {
 
 	public void recordFileOpen(String fullyQualifiedFileAddress) {
 		try {
-			ChangePersister.instance().persist(buildIDEEventJSON(Events.fileOpen, fullyQualifiedFileAddress));
+			changePersister.persist(buildIDEEventJSON(Events.fileOpen, fullyQualifiedFileAddress));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -99,7 +110,7 @@ public class ClientRecorder {
 
 	public void recordFileClose(String fullyQualifiedFileAddress) {
 		try {
-			ChangePersister.instance().persist(buildIDEEventJSON(Events.fileClose, fullyQualifiedFileAddress));
+			changePersister.persist(buildIDEEventJSON(Events.fileClose, fullyQualifiedFileAddress));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -107,7 +118,7 @@ public class ClientRecorder {
 
 	public void recordTestRun(String fullyQualifiedTestMethod, String testResult, double elapsedTime) {
 		try {
-			ChangePersister.instance().persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult, elapsedTime));
+			changePersister.persist(buildTestEventJSON(fullyQualifiedTestMethod, testResult, elapsedTime));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -115,7 +126,7 @@ public class ClientRecorder {
 
 	public void recordSnapshot(String snapshotPath) {
 		try {
-			ChangePersister.instance().persist(buildSnapshotJSON(snapshotPath));
+			changePersister.persist(buildSnapshotJSON(snapshotPath));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -123,7 +134,7 @@ public class ClientRecorder {
 
 	public void recordFileSave(String filePath, long modificationStamp) {
 		try {
-			ChangePersister.instance().persist(buildSaveEvent(Events.fileSave, filePath, modificationStamp));
+			changePersister.persist(buildSaveEvent(Events.fileSave, filePath, modificationStamp));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -131,7 +142,7 @@ public class ClientRecorder {
 
 	public void recordCopy(String entityAddress, int offset, int lenght, String copiedText) {
 		try {
-			ChangePersister.instance().persist(buildCopyJSON(Events.copy, entityAddress, offset, lenght, copiedText));
+			changePersister.persist(buildCopyJSON(Events.copy, entityAddress, offset, lenght, copiedText));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -139,7 +150,7 @@ public class ClientRecorder {
 
 	public void recordResourceAdd(String entityAddress, String initialText) {
 		try {
-			ChangePersister.instance().persist(buildResourceAddJSON(entityAddress, initialText));
+			changePersister.persist(buildResourceAddJSON(entityAddress, initialText));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -147,7 +158,7 @@ public class ClientRecorder {
 
 	public void recordResourceDelete(String entityAddress) {
 		try {
-			ChangePersister.instance().persist(buildResourceDeleteJSON(entityAddress));
+			changePersister.persist(buildResourceDeleteJSON(entityAddress));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -155,7 +166,7 @@ public class ClientRecorder {
 
 	public void recordGitEvent(String repoPath, GitRepoStatus status) {
 		try {
-			ChangePersister.instance().persist(buildGitStatusJSON(repoPath, status));
+			changePersister.persist(buildGitStatusJSON(repoPath, status));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -164,7 +175,7 @@ public class ClientRecorder {
 	
 	public void recordExternalLibraryAdd(String libraryFullpath, String libraryFileContentsBase64) {
 		try {
-			ChangePersister.instance().persist(buildExternalLibraryJSON(libraryFullpath, libraryFileContentsBase64));
+			changePersister.persist(buildExternalLibraryJSON(libraryFullpath, libraryFileContentsBase64));
 		} catch (RecordException e) {
 		}
 	}
@@ -270,7 +281,7 @@ public class ClientRecorder {
 
 	public void recordRefactoring(String refactoringName, Map argumentMap) {
 		try {
-			ChangePersister.instance().persist(buildRefactoringEvent(Events.refactoringLaunch, refactoringName, argumentMap));
+			changePersister.persist(buildRefactoringEvent(Events.refactoringLaunch, refactoringName, argumentMap));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -278,7 +289,7 @@ public class ClientRecorder {
 
 	public void recordRefactoringUndo(String refactoringName, Map argumentsMap) {
 		try {
-			ChangePersister.instance().persist(buildRefactoringEvent(Events.refactoringUndo, refactoringName, argumentsMap));
+			changePersister.persist(buildRefactoringEvent(Events.refactoringUndo, refactoringName, argumentsMap));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}
@@ -286,7 +297,7 @@ public class ClientRecorder {
 
 	public void recordRefactoringEnd(String refactoringName, Map argumentsMap) {
 		try {
-			ChangePersister.instance().persist(buildRefactoringEvent(Events.refactoringEnd, refactoringName, argumentsMap));
+			changePersister.persist(buildRefactoringEvent(Events.refactoringEnd, refactoringName, argumentsMap));
 		} catch (RecordException e) {
 			logger.error(this, e.getMessage(), e);
 		}

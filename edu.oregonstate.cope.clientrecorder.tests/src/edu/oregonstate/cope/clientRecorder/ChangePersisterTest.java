@@ -16,25 +16,34 @@ import edu.oregonstate.cope.tests.util.StubFileProvider;
 public class ChangePersisterTest {
 
 	private StubFileProvider fileManager;
+	private ChangePersister changePersister;
 
 	@Before
 	public void setup() {
 		fileManager = new StubFileProvider();
-		ChangePersister.instance().setFileManager(fileManager);
-
+		
+		changePersister = new ChangePersister(fileManager);
+		
 		testInit();
 	}
 
 	@Test
 	public void testInit() {
 		List<JSONObject> jarr = getJsonArray();
-		assertEquals(1, jarr.size());
-		testMarkerJSON(jarr);
+		assertEquals(0, jarr.size());
 	}
 
 	@Test
 	public void testInitFileAfterDelete() throws Exception {
 		testInit();
+		fileManager.deleteFiles();
+		testPersistOneRecord();
+	}
+	
+	@Test
+	public void testWriteDeleteWrite() throws Exception {
+		testInit();
+		testPersistTwoRecords();
 		fileManager.deleteFiles();
 		testPersistOneRecord();
 	}
@@ -62,7 +71,7 @@ public class ChangePersisterTest {
 
 	@Test(expected=RecordException.class)
 	public void testPersistNull() throws Exception {
-		ChangePersister.instance().persist(null);
+		changePersister.persist(null);
 		testInit();
 	}
 
@@ -71,7 +80,7 @@ public class ChangePersisterTest {
 		JSONObject objToRecord = new JSONObject();
 		objToRecord.put("test", "fileIO");
 
-		ChangePersister.instance().persist(objToRecord);
+		changePersister.persist(objToRecord);
 
 		List<JSONObject> jarr = getJsonArray();
 		assertEquals(2, jarr.size());
@@ -88,8 +97,8 @@ public class ChangePersisterTest {
 		JSONObject objToRecord2 = new JSONObject();
 		objToRecord1.put("test2", "fileIO2");
 
-		ChangePersister.instance().persist(objToRecord1);
-		ChangePersister.instance().persist(objToRecord2);
+		changePersister.persist(objToRecord1);
+		changePersister.persist(objToRecord2);
 
 		List<JSONObject> jarr = getJsonArray();
 		assertEquals(jarr.size(), 3);

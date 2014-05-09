@@ -18,23 +18,20 @@ public class ChangePersister {
 	private static final String SEPARATOR = "\n$@$";
 	public static final Pattern ELEMENT_REGEX = Pattern.compile(Pattern.quote(SEPARATOR) + "(\\{.*?\\})");
 
-	private FileProvider fileManager;
+	private FileProvider fileProvider;
 
-	private static class Instance {
-		public static final ChangePersister instance = new ChangePersister();
-	}
-
-	private ChangePersister() {
+	public ChangePersister(FileProvider fileProvider) {
+		this.fileProvider = fileProvider;
 	}
 
 	// TODO This gets called on every persist. Maybe create a special
 	// FileProvider that knows how to initialize things on file swap
-	public void addInitEventIfAbsent() {
-		if (fileManager.isCurrentFileEmpty()) {
+	private void addInitEventIfAbsent() {
+		if (fileProvider.isCurrentFileEmpty()) {
 			JSONObject markerObject = createInitJSON();
 
-			fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
-			fileManager.appendToCurrentFile(markerObject.toJSONString());
+			fileProvider.appendToCurrentFile(ChangePersister.SEPARATOR);
+			fileProvider.appendToCurrentFile(markerObject.toJSONString());
 		}
 	}
 
@@ -44,10 +41,6 @@ public class ChangePersister {
 		return markerObject;
 	}
 
-	public static ChangePersister instance() {
-		return Instance.instance;
-	}
-
 	public synchronized void persist(JSONObject jsonObject) throws RecordException {
 		if (jsonObject == null) {
 			throw new RecordException("Argument cannot be null");
@@ -55,12 +48,7 @@ public class ChangePersister {
 
 		addInitEventIfAbsent();
 
-		fileManager.appendToCurrentFile(ChangePersister.SEPARATOR);
-		fileManager.appendToCurrentFile(jsonObject.toJSONString());
-	}
-
-	public void setFileManager(FileProvider fileManager) {
-		this.fileManager = fileManager;
-		addInitEventIfAbsent();
+		fileProvider.appendToCurrentFile(ChangePersister.SEPARATOR);
+		fileProvider.appendToCurrentFile(jsonObject.toJSONString());
 	}
 }
