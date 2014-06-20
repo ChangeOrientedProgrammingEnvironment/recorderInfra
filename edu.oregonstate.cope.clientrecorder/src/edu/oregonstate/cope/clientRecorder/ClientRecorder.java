@@ -18,7 +18,7 @@ public class ClientRecorder {
 
 	private String IDE;
 
-	private LoggerInterface logger;
+	protected LoggerInterface logger;
 
 	protected ChangePersister changePersister;
 
