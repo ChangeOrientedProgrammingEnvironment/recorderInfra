@@ -48,10 +48,10 @@ public class FileSenderJob implements Job
 				}
 								
 				SFTPUploader uploader;
-				if( workspaceProperties.getProperty(HOSTNAME_PROPERTY) != null && !workspaceProperties.getProperty(HOSTNAME_PROPERTY).isEmpty()
-                    && workspaceProperties.getProperty(PORT_PROPERTY) != null && !workspaceProperties.getProperty(PORT_PROPERTY).isEmpty()
-                    && workspaceProperties.getProperty(USERNAME_PROPERTY) != null && !workspaceProperties.getProperty(USERNAME_PROPERTY).isEmpty()
-                    && workspaceProperties.getProperty(PASSWORD_PROPERTY) != null && !workspaceProperties.getProperty(PASSWORD_PROPERTY).isEmpty()
+				if( !workspaceProperties.getProperty(HOSTNAME_PROPERTY,"").isEmpty()
+                    && !workspaceProperties.getProperty(PORT_PROPERTY,"").isEmpty()
+                    && !workspaceProperties.getProperty(USERNAME_PROPERTY,"").isEmpty()
+                    && !workspaceProperties.getProperty(PASSWORD_PROPERTY,"").isEmpty()
 				) {
 					logger.info(this, "Connecting to host " + workspaceProperties.getProperty(HOSTNAME_PROPERTY) + " ...");
 					uploader = new SFTPUploader(
