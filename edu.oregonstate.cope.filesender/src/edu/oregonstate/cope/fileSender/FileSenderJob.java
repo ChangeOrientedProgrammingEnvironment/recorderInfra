@@ -53,22 +53,19 @@ public class FileSenderJob implements Job
                     && !workspaceProperties.getProperty(USERNAME_PROPERTY,"").isEmpty()
                     && !workspaceProperties.getProperty(PASSWORD_PROPERTY,"").isEmpty()
 				) {
-					logger.info(this, "Connecting to host " + workspaceProperties.getProperty(HOSTNAME_PROPERTY) + " ...");
-					uploader = new SFTPUploader(
-						workspaceProperties.getProperty(HOSTNAME_PROPERTY), 
-						Integer.parseInt(workspaceProperties.getProperty(PORT_PROPERTY)), 
-						workspaceProperties.getProperty(USERNAME_PROPERTY), 
-						ftpProperties.decrypt(workspaceProperties.getProperty(PASSWORD_PROPERTY))
-					);	
-				} else {
-					logger.info(this, "Connecting to host " + ftpProperties.getHost() + " ...");
-					uploader = new SFTPUploader(
-						ftpProperties.getHost(), 
-						ftpProperties.getPort(), 
-						ftpProperties.getUsername(), 
-						ftpProperties.getPassword()
-					);					
+					
+					workspaceProperties.addProperty(HOSTNAME_PROPERTY, ftpProperties.getHost());
+					workspaceProperties.addProperty(PORT_PROPERTY, ftpProperties.getPort() + "");
+					workspaceProperties.addProperty(USERNAME_PROPERTY, ftpProperties.getUsername());
+					workspaceProperties.addProperty(PASSWORD_PROPERTY, ftpProperties.encrypt(ftpProperties.getPassword()));
 				}
+				logger.info(this, "Connecting to host " + workspaceProperties.getProperty(HOSTNAME_PROPERTY) + " ...");
+				uploader = new SFTPUploader(
+					workspaceProperties.getProperty(HOSTNAME_PROPERTY), 
+					Integer.parseInt(workspaceProperties.getProperty(PORT_PROPERTY)), 
+					workspaceProperties.getProperty(USERNAME_PROPERTY), 
+					ftpProperties.decrypt(workspaceProperties.getProperty(PASSWORD_PROPERTY))
+					);	
 				String localPath = storageManager.getAbsolutePath();
 				// using eclipse workspace ID as a remote dir to store data
 				String remotePath = "COPE" + File.separator + workspaceID;
