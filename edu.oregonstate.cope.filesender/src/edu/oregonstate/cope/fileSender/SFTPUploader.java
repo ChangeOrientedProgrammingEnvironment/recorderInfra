@@ -3,6 +3,7 @@ package edu.oregonstate.cope.fileSender;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 
@@ -91,6 +92,11 @@ public class SFTPUploader {
 					inputStream = fileInputStream;
 				}
 				this.channelSftp.put(inputStream, file.getName());
+				try {
+					fileInputStream.close();
+				} catch (IOException e) {
+					COPELogger.getInstance().error(this, "Error closing the input stream", e);
+				}
 			} else {	
 				this.createRemoteDir(file.getName());
 				this.uploadPathToFTP(localPath + File.separator + file.getName(),  file.getName());
