@@ -12,7 +12,7 @@ Bundle-ClassPath: json-simple-1.1.1.jar,
  commons-vfs2-2.0.jar,
  quartz-1.8.6.jar,
  commons-net-3.3.jar,
- BandwithLimiter-1.0.jar
+ BandwidthLimiter-1.0.jar
 Export-Package: ch.qos.logback.classic,
  ch.qos.logback.classic.boolex,
  ch.qos.logback.classic.db,
