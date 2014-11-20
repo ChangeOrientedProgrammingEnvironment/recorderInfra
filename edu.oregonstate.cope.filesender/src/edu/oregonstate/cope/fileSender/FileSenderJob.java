@@ -48,10 +48,10 @@ public class FileSenderJob implements Job
 				}
 								
 				SFTPUploader uploader;
-				if( !workspaceProperties.getProperty(HOSTNAME_PROPERTY,"").isEmpty()
-                    && !workspaceProperties.getProperty(PORT_PROPERTY,"").isEmpty()
-                    && !workspaceProperties.getProperty(USERNAME_PROPERTY,"").isEmpty()
-                    && !workspaceProperties.getProperty(PASSWORD_PROPERTY,"").isEmpty()
+				if( workspaceProperties.getProperty(HOSTNAME_PROPERTY,"").isEmpty()
+                    || workspaceProperties.getProperty(PORT_PROPERTY,"").isEmpty()
+                    || workspaceProperties.getProperty(USERNAME_PROPERTY,"").isEmpty()
+                    || workspaceProperties.getProperty(PASSWORD_PROPERTY,"").isEmpty()
 				) {
 					
 					workspaceProperties.addProperty(HOSTNAME_PROPERTY, ftpProperties.getHost());
