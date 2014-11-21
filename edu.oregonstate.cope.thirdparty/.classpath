@@ -11,5 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="commons-vfs2-2.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="quartz-1.8.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="commons-net-3.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="BandwidthLimiter-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -57,7 +57,7 @@ public class Properties {
 	public void addProperty(String key, String value) {
 		if (key == null)
 			return;
-		
+
 		initFromFile();
 		properties.put(key, value);
 		persist();
@@ -66,8 +66,25 @@ public class Properties {
 	public String getProperty(String key) {
 		if (key == null)
 			return null;
-		
+
 		initFromFile();
 		return properties.get(key);
+	}
+
+	/**
+	 * Returns the property if it exists, or the default value if it does not.
+	 * 
+	 * @param key
+	 *            the key to get
+	 * @param defaultValue
+	 *            the default value to return in case the key is not found.
+	 * @return
+	 */
+	public String getProperty(String key, String defaultValue) {
+		String property = getProperty(key);
+		if (property == null)
+			return defaultValue;
+
+		return property;
 	}
 }
