@@ -28,15 +28,18 @@ public class SFTPUploader {
 	private String username = "";
 	private String password = "";
 	
-	private long uploadLimit = 200;
-	private boolean shouldLimit = true;
+	private int uploadLimit;
+	private boolean shouldLimit;
 	private StreamManager streamManager = null;
 	
-	private void initializeSession(String host, int port, String username, String password) throws UnknownHostException, JSchException {
+	private void initializeSession(String host, int port, String username, String password, boolean shouldLimit, int uploadLimit) throws UnknownHostException, JSchException {
 		this.host = host;
 		this.port = port;
 		this.username = username;
 		this.password = password;
+		
+		this.shouldLimit = shouldLimit;
+		this.uploadLimit = uploadLimit;
 		
 		JSch jsch = new JSch();
 		this.session = jsch.getSession(this.username, this.host, this.port);
@@ -55,7 +58,12 @@ public class SFTPUploader {
 	}
 	
 	public SFTPUploader(String host, int port, String username, String password) throws UnknownHostException, JSchException {
-		this.initializeSession(host, port, username, password);
+		this(host, port, username, password, false, 0);
+	}
+
+	
+	public SFTPUploader(String host, int port, String username, String password, boolean shouldLimit, int uploadLimit) throws UnknownHostException, JSchException {
+		this.initializeSession(host, port, username, password, shouldLimit, uploadLimit);
 	}
 	
 	public void upload(String localPath, String remotePath) throws FileNotFoundException, SftpException, JSchException {
