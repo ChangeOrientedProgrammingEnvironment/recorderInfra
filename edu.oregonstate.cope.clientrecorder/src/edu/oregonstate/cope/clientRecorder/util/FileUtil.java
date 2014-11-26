@@ -1,9 +1,12 @@
 package edu.oregonstate.cope.clientRecorder.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +20,18 @@ public class FileUtil {
 			return getTextFileContents(inputStream);
 		else
 			return getBinaryFileContents(inputStream);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static InputStream decodeSteam(String fileExtension, InputStream inputStream) throws IOException {
+		if (FileUtil.knownTextFiles.contains(fileExtension))
+			return new StringBufferInputStream(getTextFileContents(inputStream));
+		else {
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			readFromTo(inputStream, byteArrayOutputStream);
+			byte[] decodedFile = Base64.decodeBase64(byteArrayOutputStream.toByteArray());
+			return new ByteArrayInputStream(decodedFile);
+		}
 	}
 
 	/**
