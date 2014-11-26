@@ -71,6 +71,17 @@ public class PropertiesTest {
 		testForKey("k1", "v1");
 		testForKey(strangeKey, strangeValue);
 	}
+	
+	@Test
+	public void testDefaultWithNoValue() {
+		assertEquals("default", properties.getProperty("nonexistent","default"));
+	}
+	
+	@Test
+	public void testDefaultWithExisingValue() {
+		properties.addProperty("existing","something");
+		assertEquals("something", properties.getProperty("existing", "default"));
+	}
 
 	private void testForKey(String key, String value) {
 		assertEquals(value, properties.getProperty(key));

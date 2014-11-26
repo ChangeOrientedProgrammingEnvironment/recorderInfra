@@ -24,6 +24,8 @@ public class FileSenderJob implements Job
 	private static final String PORT_PROPERTY = "port";
 	private static final String USERNAME_PROPERTY = "username";
 	private static final String PASSWORD_PROPERTY = "password";
+	private static final String SHOULD_LIMIT_BANDWIDTH_PROPERTY = "should_limit";
+	private static final String UPLOAD_LIMIT_PROPERTY = "upload_limit";
 			
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		SchedulerContext schedulerContext;
@@ -48,27 +50,27 @@ public class FileSenderJob implements Job
 				}
 								
 				SFTPUploader uploader;
-				if( workspaceProperties.getProperty(HOSTNAME_PROPERTY) != null && !workspaceProperties.getProperty(HOSTNAME_PROPERTY).isEmpty()
-                    && workspaceProperties.getProperty(PORT_PROPERTY) != null && !workspaceProperties.getProperty(PORT_PROPERTY).isEmpty()
-                    && workspaceProperties.getProperty(USERNAME_PROPERTY) != null && !workspaceProperties.getProperty(USERNAME_PROPERTY).isEmpty()
-                    && workspaceProperties.getProperty(PASSWORD_PROPERTY) != null && !workspaceProperties.getProperty(PASSWORD_PROPERTY).isEmpty()
+				if( workspaceProperties.getProperty(HOSTNAME_PROPERTY,"").isEmpty()
+                    || workspaceProperties.getProperty(PORT_PROPERTY,"").isEmpty()
+                    || workspaceProperties.getProperty(USERNAME_PROPERTY,"").isEmpty()
+                    || workspaceProperties.getProperty(PASSWORD_PROPERTY,"").isEmpty()
 				) {
-					logger.info(this, "Connecting to host " + workspaceProperties.getProperty(HOSTNAME_PROPERTY) + " ...");
-					uploader = new SFTPUploader(
-						workspaceProperties.getProperty(HOSTNAME_PROPERTY), 
-						Integer.parseInt(workspaceProperties.getProperty(PORT_PROPERTY)), 
-						workspaceProperties.getProperty(USERNAME_PROPERTY), 
-						ftpProperties.decrypt(workspaceProperties.getProperty(PASSWORD_PROPERTY))
-					);	
-				} else {
-					logger.info(this, "Connecting to host " + ftpProperties.getHost() + " ...");
-					uploader = new SFTPUploader(
-						ftpProperties.getHost(), 
-						ftpProperties.getPort(), 
-						ftpProperties.getUsername(), 
-						ftpProperties.getPassword()
-					);					
+					
+					workspaceProperties.addProperty(HOSTNAME_PROPERTY, ftpProperties.getHost());
+					workspaceProperties.addProperty(PORT_PROPERTY, ftpProperties.getPort() + "");
+					workspaceProperties.addProperty(USERNAME_PROPERTY, ftpProperties.getUsername());
+					workspaceProperties.addProperty(PASSWORD_PROPERTY, ftpProperties.encrypt(ftpProperties.getPassword()));
 				}
+				logger.info(this, "Connecting to host " + workspaceProperties.getProperty(HOSTNAME_PROPERTY) + " ...");
+				boolean shouldLimit = Boolean.parseBoolean(workspaceProperties.getProperty(SHOULD_LIMIT_BANDWIDTH_PROPERTY, "false"));
+				int uploadLimit = Integer.parseInt(workspaceProperties.getProperty(UPLOAD_LIMIT_PROPERTY, "0"));
+				uploader = new SFTPUploader(
+					workspaceProperties.getProperty(HOSTNAME_PROPERTY), 
+					Integer.parseInt(workspaceProperties.getProperty(PORT_PROPERTY)), 
+					workspaceProperties.getProperty(USERNAME_PROPERTY), 
+					ftpProperties.decrypt(workspaceProperties.getProperty(PASSWORD_PROPERTY)),
+					shouldLimit, uploadLimit
+					);	
 				String localPath = storageManager.getAbsolutePath();
 				// using eclipse workspace ID as a remote dir to store data
 				String remotePath = "COPE" + File.separator + workspaceID;

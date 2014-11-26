@@ -3,7 +3,11 @@ package edu.oregonstate.cope.fileSender;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.UnknownHostException;
+
+import org.java_bandwidthlimiter.StreamManager;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -11,6 +15,8 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+
+import edu.oregonstate.cope.clientRecorder.util.COPELogger;
 
 public class SFTPUploader {
 	
@@ -22,11 +28,18 @@ public class SFTPUploader {
 	private String username = "";
 	private String password = "";
 	
-	private void initializeSession(String host, int port, String username, String password) throws UnknownHostException, JSchException {
+	private int uploadLimit;
+	private boolean shouldLimit;
+	private StreamManager streamManager = null;
+	
+	private void initializeSession(String host, int port, String username, String password, boolean shouldLimit, int uploadLimit) throws UnknownHostException, JSchException {
 		this.host = host;
 		this.port = port;
 		this.username = username;
 		this.password = password;
+		
+		this.shouldLimit = shouldLimit;
+		this.uploadLimit = uploadLimit;
 		
 		JSch jsch = new JSch();
 		this.session = jsch.getSession(this.username, this.host, this.port);
@@ -39,11 +52,18 @@ public class SFTPUploader {
 		Channel channel = this.session.openChannel("sftp");
 		channel.connect();
 		this.channelSftp = (ChannelSftp) channel;
-	
+		
+		streamManager = new StreamManager(uploadLimit * StreamManager.OneKbps * 8);
+		streamManager.enable();
 	}
 	
 	public SFTPUploader(String host, int port, String username, String password) throws UnknownHostException, JSchException {
-		this.initializeSession(host, port, username, password);
+		this(host, port, username, password, false, 0);
+	}
+
+	
+	public SFTPUploader(String host, int port, String username, String password, boolean shouldLimit, int uploadLimit) throws UnknownHostException, JSchException {
+		this.initializeSession(host, port, username, password, shouldLimit, uploadLimit);
 	}
 	
 	public void upload(String localPath, String remotePath) throws FileNotFoundException, SftpException, JSchException {
@@ -72,7 +92,19 @@ public class SFTPUploader {
 
 		for(File file : files) {
 			if(file.isFile()) {
-				this.channelSftp.put(new FileInputStream(file), file.getName());
+				InputStream fileInputStream = new FileInputStream(file);
+				InputStream inputStream;
+				if (shouldLimit) {
+					inputStream = streamManager.registerStream(fileInputStream);
+				} else {
+					inputStream = fileInputStream;
+				}
+				this.channelSftp.put(inputStream, file.getName());
+				try {
+					fileInputStream.close();
+				} catch (IOException e) {
+					COPELogger.getInstance().error(this, "Error closing the input stream", e);
+				}
 			} else {	
 				this.createRemoteDir(file.getName());
 				this.uploadPathToFTP(localPath + File.separator + file.getName(),  file.getName());
