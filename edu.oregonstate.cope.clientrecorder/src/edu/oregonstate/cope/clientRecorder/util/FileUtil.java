@@ -11,7 +11,7 @@ import org.apache.commons.codec.binary.Base64;
 
 public class FileUtil {
 
-	public static String decodeStream(String fileExtension, InputStream inputStream)
+	public static String encodeStream(String fileExtension, InputStream inputStream)
 			throws IOException {
 		if (FileUtil.knownTextFiles.contains(fileExtension))
 			return getTextFileContents(inputStream);
