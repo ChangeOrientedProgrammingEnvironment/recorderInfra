@@ -62,7 +62,7 @@ public class FileUtil {
 		return new String(bytes);
 	}
 
-	private static void readFromTo(InputStream inputStream, OutputStream outputStream) throws IOException {
+	protected static void readFromTo(InputStream inputStream, OutputStream outputStream) throws IOException {
 		do {
 			byte[] b = new byte[1024];
 			int read = inputStream.read(b, 0, 1024);
